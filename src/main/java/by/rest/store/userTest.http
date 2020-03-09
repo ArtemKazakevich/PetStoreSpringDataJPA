@@ -1,0 +1,117 @@
+GET http://localhost:8080/user/string
+Content-Type: application/json
+
+{
+  "token": 3958707454419161629
+}
+
+###
+
+PUT http://localhost:8080/user/string
+Content-Type: application/json
+
+{
+  "token": 7323243919010337254,
+  "user": {
+    "id": 0,
+    "userName": "string",
+    "firstName": "test",
+    "lastName": "superTest",
+    "email": "test",
+    "password": "test",
+    "phone": "test",
+    "userStatus": 0
+  }
+}
+
+###
+
+DELETE http://localhost:8080/user/string
+Content-Type: application/json
+
+{
+  "token": 7323243919010337254
+}
+
+###
+
+POST http://localhost:8080/user/login
+Content-Type: application/json
+
+{
+  "user": {
+    "id": 0,
+    "userName": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "password": "string",
+    "phone": "string",
+    "userStatus": 0
+  }
+}
+
+###
+
+POST http://localhost:8080/user/logout
+Content-Type: application/json
+
+{
+  "token": 7323243919010337254
+}
+
+###
+
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+  "id": 0,
+  "userName": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "password": "string",
+  "phone": "string",
+  "userStatus": 0
+}
+
+###
+
+POST http://localhost:8080/user/createWithList
+Content-Type: application/json
+
+[
+  {
+    "id": 1,
+    "userName": "string1",
+    "firstName": "string1",
+    "lastName": "string1",
+    "email": "string1",
+    "password": "string1",
+    "phone": "string1",
+    "userStatus": 0
+  },
+  {
+    "id": 2,
+    "userName": "string2",
+    "firstName": "string2",
+    "lastName": "string2",
+    "email": "string2",
+    "password": "string2",
+    "phone": "string2",
+    "userStatus": 0
+  },
+  {
+    "id": 3,
+    "userName": "string3",
+    "firstName": "string3",
+    "lastName": "string3",
+    "email": "string3",
+    "password": "string3",
+    "phone": "string3",
+    "userStatus": 0
+  }
+]
+
+###
