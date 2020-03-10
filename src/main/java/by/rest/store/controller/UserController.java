@@ -4,8 +4,10 @@ import by.rest.store.exception.user.UserBadRequestException;
 import by.rest.store.exception.user.UserNotFoundException;
 import by.rest.store.model.User;
 import by.rest.store.model.request.user.UserRequest;
+import by.rest.store.repository.UserRepository;
 import by.rest.store.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,41 +29,35 @@ public class UserController {
           this.userService = userService;
      }
      
-     @GetMapping(path = "/{userName}")
-     public ResponseEntity<User> getUser(@PathVariable("userName") @NotBlank String userName,
+     @GetMapping(path = "/{id}")
+     public ResponseEntity<User> getUser(@PathVariable("id") @NotBlank Long id,
                                          @RequestBody UserRequest userRequest) {
-          if (!userService.getTokens().containsValue(userRequest.getToken())) throw new UserBadRequestException();
-          Map<String, User> usersMap = userService.getUsersMap();
-          if (!usersMap.containsKey(userName)) throw new UserNotFoundException();
+          if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
           log.info("The list is made");
-          return new ResponseEntity<>(usersMap.get(userName), HttpStatus.OK);
+          return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
      }
      
-     @PutMapping(path = "/{userName}")
-     public ResponseEntity<String> updateUser(@PathVariable("userName") @NotBlank String userName,
+     @PutMapping(path = "/{id}")
+     public ResponseEntity<String> updateUser(@PathVariable("id") @NotBlank Long id,
                                               @RequestBody UserRequest userRequest) {
-          if (!userService.getTokens().containsValue(userRequest.getToken())) throw new UserBadRequestException();
-          Map<String, User> usersMap = userService.getUsersMap();
-          if (!usersMap.containsKey(userName)) throw new UserNotFoundException();
-          usersMap.put(userName, userRequest.getUser());
+          if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
+          userService.updateUser(id, userRequest.getUser());
           log.info("The user is successfully updated");
           return new ResponseEntity<>("The user is successfully updated", HttpStatus.OK);
      }
      
-     @DeleteMapping(path = "/{userName}")
-     public ResponseEntity<String> deleteUser(@PathVariable("userName") @NotBlank String userName,
+     @DeleteMapping(path = "/{id}")
+     public ResponseEntity<String> deleteUser(@PathVariable("id") @NotBlank Long id,
                                               @RequestBody UserRequest userRequest) {
-          if (!userService.getTokens().containsValue(userRequest.getToken())) throw new UserBadRequestException();
-          Map<String, User> usersMap = userService.getUsersMap();
-          if (!usersMap.containsKey(userName)) throw new UserNotFoundException();
-          usersMap.remove(userName);
+          if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
+          userService.deleteUser(id);
           log.info("The user was successfully deleted");
           return new ResponseEntity<>("The user was successfully deleted", HttpStatus.OK);
      }
      
      @PostMapping(path = "/login")
-     public ResponseEntity<Long> loginUser(@RequestBody UserRequest userRequest) {
-          Long token = userService.authentication(userRequest.getUser());
+     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
+          String token = userService.authentication(userRequest.getUser());
           if (token == null) throw new UserBadRequestException();
           log.info("Login completed");
           return new ResponseEntity<>(token, HttpStatus.OK);
@@ -69,8 +65,8 @@ public class UserController {
      
      @PostMapping(path = "/logout")
      public ResponseEntity<String> logoutUser(@RequestBody UserRequest userRequest) {
-          if (!userService.getTokens().containsValue(userRequest.getToken())) throw new UserBadRequestException();
-          userService.getTokens().values().remove(userRequest.getToken());
+          if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
+          userService.logout(userRequest.getToken());
           log.info("Exit successfully completed");
           return new ResponseEntity<>("Exit successfully completed", HttpStatus.OK);
      }
@@ -80,12 +76,5 @@ public class UserController {
           userService.addUser(user);
           log.info("The user is created");
           return new ResponseEntity<>("The user is created", HttpStatus.OK);
-     }
-     
-     @PostMapping(path = "/createWithList")
-     public ResponseEntity<String> createWithListUser(@Valid @RequestBody List<User> users) {
-          userService.addAllUsers(users);
-          log.info("User output completed");
-          return new ResponseEntity<>("User output completed", HttpStatus.OK);
      }
 }

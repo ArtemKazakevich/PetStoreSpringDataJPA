@@ -3,16 +3,19 @@ package by.rest.store.service;
 import by.rest.store.model.User;
 
 import java.util.List;
-import java.util.Map;
 
-public interface UserService {
-     Map<String, User> getUsersMap();
-     
-     Map<Long, Long> getTokens();
-     
+public interface UserService { ;
      void addUser(User user);
      
-     Long authentication(User newUser);
+     User getUser(Long id);
      
-     void addAllUsers(List<User> userList);
+     void updateUser(Long id, User user);
+     
+     boolean isLoggedIn(String token);
+     
+     void deleteUser(Long id);
+     
+     void logout(String token);
+     
+     String authentication(User newUser);
 }
