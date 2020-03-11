@@ -5,13 +5,12 @@ import by.rest.store.exception.user.UserNotFoundException;
 import by.rest.store.model.User;
 import by.rest.store.repository.UserRepository;
 import by.rest.store.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -20,6 +19,7 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
      private UserRepository userRepository;
      
+     @Autowired
      public UserServiceImpl(UserRepository userRepository) {
           this.userRepository = userRepository;
      }

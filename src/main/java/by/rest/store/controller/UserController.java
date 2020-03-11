@@ -1,22 +1,17 @@
 package by.rest.store.controller;
 
 import by.rest.store.exception.user.UserBadRequestException;
-import by.rest.store.exception.user.UserNotFoundException;
 import by.rest.store.model.User;
 import by.rest.store.model.request.user.UserRequest;
-import by.rest.store.repository.UserRepository;
 import by.rest.store.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -30,7 +25,7 @@ public class UserController {
      }
      
      @GetMapping(path = "/{id}")
-     public ResponseEntity<User> getUser(@PathVariable("id") @NotBlank Long id,
+     public ResponseEntity<User> getUser(@PathVariable("id") @Min(value = 0) Long id,
                                          @RequestBody UserRequest userRequest) {
           if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
           log.info("The list is made");
@@ -38,7 +33,7 @@ public class UserController {
      }
      
      @PutMapping(path = "/{id}")
-     public ResponseEntity<String> updateUser(@PathVariable("id") @NotBlank Long id,
+     public ResponseEntity<String> updateUser(@PathVariable("id") @Min(value = 0) Long id,
                                               @RequestBody UserRequest userRequest) {
           if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
           userService.updateUser(id, userRequest.getUser());
@@ -47,7 +42,7 @@ public class UserController {
      }
      
      @DeleteMapping(path = "/{id}")
-     public ResponseEntity<String> deleteUser(@PathVariable("id") @NotBlank Long id,
+     public ResponseEntity<String> deleteUser(@PathVariable("id") @Min(value = 0) Long id,
                                               @RequestBody UserRequest userRequest) {
           if (!userService.isLoggedIn(userRequest.getToken())) throw new UserBadRequestException();
           userService.deleteUser(id);
